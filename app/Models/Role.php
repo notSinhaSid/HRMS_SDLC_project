@@ -4,12 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
+    public const SUPER_ADMIN = 'super_admin';
+    public const HR = 'hr';
+    public const MANAGER = 'manager';
+    public const EMPLOYEE = 'employee';
+
     protected $fillable = ['name'];
+
+    public static function slugs(): array {
+        return [self::SUPER_ADMIN, self::HR, self::MANAGER, self::EMPLOYEE];
+    }
 
     public function users(): HasMany{
         return $this->hasMany(User::class);
