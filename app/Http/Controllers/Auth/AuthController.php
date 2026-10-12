@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -16,16 +21,34 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // $user = User::where('email', $validated['email'])->first();
         if (! Auth::attempt($credentials)) {
             return back()->withErrors(['message' => 'Invalid credentials'])->onlyInput('email');
         }
         if (Auth::user()->status !== 'active') {
-            return back()->withErrors(['message' => 'Account deactived. Contact Support'])->onlyInput('email');
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()->withErrors(['message' => 'Account deactivated. Contact Support'])->onlyInput('email');
         }
 
         $request->session()->regenerate();
+
         return redirect()->intended(route('dashboard'));
 
+    }
+
+    public function dashboard()
+    {
+        return view('auth.dashboard');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }
