@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::before(function(User $user) {
+            if($user->role?->name === Role::SUPER_ADMIN) {
+                return true;
+            }
+
+            return null;
+        });
+
+        foreach(Permission::slugs() as $slug) {
+            Gate::define($slug, fn(User $user) => $user->hasPermission($slug));
+        }
+
     }
 }
