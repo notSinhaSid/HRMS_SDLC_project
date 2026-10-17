@@ -33,7 +33,8 @@ class Role extends Model
         return $this->belongsToMany(Permission::class)->withTimestamps();
     }
 
-    public function hasPermission(string $permission) : bool {
+    public function hasPermission(string $permission): bool
+    {
         return $this->permissions->contains('name', $permission);
     }
 }
