@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Middleware\NoCache;
 use Illuminate\Support\Facades\Route;
 
@@ -17,12 +18,12 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
 });
 
-Route::middleware(['auth', NoCache::class])->group(function () {
+Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+
+    // password reset
+    Route::get('/change-password', [ProfileController::class, 'showChangePassword'])->name('password.change');
+    Route::post('/change-password', [ProfileController::class, 'updateChangePassword'])->name('password.change.update');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-// these routes are for RBAC testing only, actual will be implemented later
-Route::middleware(['auth'])->prefix('test')->group(function () {
-    Route::get('/employee-view', fn () => 'Ok: employee.view')->middleware('can:employee.view');
-});
