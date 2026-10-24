@@ -27,3 +27,7 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+// test route for checking scss
+Route::get('/scss', function() {
+    return view('testSCSS');
+});
