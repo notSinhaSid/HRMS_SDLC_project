@@ -26,8 +26,3 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::post('/change-password', [ProfileController::class, 'updateChangePassword'])->name('password.change.update');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
-
-// test route for checking scss
-Route::get('/scss', function() {
-    return view('testSCSS');
-});

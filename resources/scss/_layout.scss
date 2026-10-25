@@ -1,0 +1,27 @@
+$sidebar-width: 260px;
+
+.app-shell{
+    display:flex;
+    flex-direction: row;
+    min-height: 100vh;
+    background-color: thistle;
+}
+
+.app-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-sidebar {
+    flex-shrink: 0;
+    background-color: $brand-dark;
+    background-color: blue;
+    width: $sidebar-width;
+}
+
+.app-content {
+    flex: 1;
+    background-color: chocolate;
+}
