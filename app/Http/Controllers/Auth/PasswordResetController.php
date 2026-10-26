@@ -27,7 +27,7 @@ class PasswordResetController extends Controller
             return back()->withErrors(['email' => 'Email not found'])->onlyInput('email');
         }
         if ($user->status !== 'active') {
-            return back()->withErrors(['email' => 'Account deactivated. Contact Support'])->onlyInput('email');
+            return back()->withErrors(['message' => 'Account deactivated. Contact Support'])->onlyInput('email');
         }
 
         $status = Password::sendResetLink(['email' => $user->email, 'status' => 'active']);
@@ -36,7 +36,7 @@ class PasswordResetController extends Controller
             return back()->with('status', __($status));
         }
 
-        return back()->withErrors(['email' => __($status)])->onlyInput('email');
+        return back()->withErrors(['message' => __($status)])->onlyInput('email');
     }
 
     public function resetPassword(Request $request, string $token)
@@ -66,6 +66,6 @@ class PasswordResetController extends Controller
             return redirect()->route('login')->with('status', __($status));
         }
 
-        return back()->withErrors(['email' => __($status)])->onlyInput('email');
+        return back()->withErrors(['message' => __($status)])->onlyInput('email');
     }
 }

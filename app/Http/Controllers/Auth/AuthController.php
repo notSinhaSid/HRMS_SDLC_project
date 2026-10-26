@@ -27,7 +27,7 @@ class AuthController extends Controller
         if (RateLimiter::tooManyAttempts($key, $maxAttempts = 5)) {
             $seconds = RateLimiter::availableIn($key);
 
-            return back()->withErrors(['message' => "Too Many attempts. Try again in {$seconds} seconds"])->onlyInput('email');
+            return back()->withErrors(['message' => "Too many attempts. Try again in {$seconds} seconds"])->onlyInput('email');
         }
 
         if (! Auth::attempt($credentials)) {

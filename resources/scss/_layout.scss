@@ -4,7 +4,7 @@ $sidebar-width: 260px;
     display:flex;
     flex-direction: row;
     min-height: 100vh;
-    background-color: thistle;
+    // background-color: thistle;
 }
 
 .app-main {
@@ -17,11 +17,11 @@ $sidebar-width: 260px;
 .app-sidebar {
     flex-shrink: 0;
     background-color: $brand-dark;
-    background-color: blue;
+    // background-color: blue;
     width: $sidebar-width;
 }
 
 .app-content {
     flex: 1;
-    background-color: chocolate;
+    // background-color: chocolate;
 }

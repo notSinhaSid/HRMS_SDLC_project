@@ -1,3 +1,12 @@
-<h4>
-    Any alerts are shown here...
-</h4>
+@error('message')
+    <div class="alert alert-danger">
+        {{ $message }}
+    </div>
+@enderror
+
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+    
+@endif
