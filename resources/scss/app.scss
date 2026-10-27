@@ -22,3 +22,12 @@ $enable-shadows: false;
 @import '@fontsource/inter/400.css';
 @import '@fontsource/inter/500.css';
 @import '@fontsource/inter/600.css';
+
+  .sidebar-nav .nav-link {
+    --bs-nav-link-color: rgba(255, 255, 255, 0.7);
+    --bs-nav-link-hover-color: #fff;
+  }
+  .sidebar-nav .nav-link.active {
+    color: #fff;
+    background-color: $primary;
+  }

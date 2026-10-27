@@ -23,5 +23,14 @@ $sidebar-width: 260px;
 
 .app-content {
     flex: 1;
-    // background-color: chocolate;
+    padding: 1.5rem;
+}
+
+.topbar {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+    padding: 1rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    background: $white;
 }

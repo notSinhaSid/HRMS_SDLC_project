@@ -13,14 +13,11 @@
             @include('layouts.partials.sidebar')
         </aside>
         <div class="app-main">
-            <header class="app-topbar">
-                @include('layouts.partials.topbar')
-            </header>
+            @include('layouts.partials.topbar')
             <main class="app-content">
                 @include('layouts.partials.alerts')
                 @yield('content')
             </main>
-
         </div>
     </div>
     
