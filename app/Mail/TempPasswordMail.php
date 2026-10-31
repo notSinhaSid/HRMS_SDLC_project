@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -17,8 +16,7 @@ class TempPasswordMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $tmpPassword, public string $email, public string $name)
-    {}
+    public function __construct(public string $tmpPassword, public string $email, public string $name) {}
 
     /**
      * Get the message envelope.

@@ -27,7 +27,7 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::post('/change-password', [ProfileController::class, 'updateChangePassword'])->name('password.change.update');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    //user related routes
+    // user related routes
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('can:employee.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store')->middleware('can:employee.create');
 });

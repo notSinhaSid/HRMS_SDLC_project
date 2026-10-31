@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-use function PHPSTORM_META\map;
-
 class Role extends Model
 {
     public const SUPER_ADMIN = 'super_admin';
@@ -21,8 +19,8 @@ class Role extends Model
     protected $fillable = ['name'];
 
     private const ASSIGNABLE = [self::SUPER_ADMIN => [self::HR, self::MANAGER, self::EMPLOYEE],
-            self::HR => [self::MANAGER, self::EMPLOYEE],
-            ];
+        self::HR => [self::MANAGER, self::EMPLOYEE],
+    ];
 
     public static function slugs(): array
     {
@@ -44,8 +42,10 @@ class Role extends Model
         return $this->permissions->contains('name', $permission);
     }
 
-    public function assignableRoles() {   
+    public function assignableRoles()
+    {
         $names = self::ASSIGNABLE[$this->name] ?? [];
+
         return self::whereIn('name', $names)->get();
     }
 }

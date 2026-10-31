@@ -5,27 +5,31 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Services\UserService;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected UserService $userService;
+    public function __construct(private UserService $userService) {}
 
-    public function __construct(UserService $userService) {
-        $this->userService = $userService;
+    public function create(Request $request)
+    {
+        // we get the roles here which is used to show in the dropdown of the create form
+        $roles = $request->user()->role->assignableRoles();
+
+        return view('users.create', compact('roles'));
     }
 
-    public function create() {
-        return view('users.create');
-    }
-
-    public function store(StoreUserRequest $request) {
-        try{
+    public function store(StoreUserRequest $request)
+    {
+        try {
             $this->userService->createUser($request->validated());
-        }catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             report($e);
-            return back()->withErrors(['message' => 'Failed to create user. Try again']);
+
+            return back()->withInput()->withErrors(['message' => 'Failed to create user. Please try again']);
         }
-        return redirect()->route('users.create')->with(['status' => 'User create. Temporary password sent to mail']);
-        
+
+        return redirect()->route('users.create')->with(['status' => 'User created. Temporary password sent by email']);
+
     }
 }
