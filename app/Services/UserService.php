@@ -1,9 +1,11 @@
 <?php
 namespace App\Services;
 
+use App\Mail\TempPasswordMail;
 use App\Repositories\UserRepository;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class UserService {
@@ -15,7 +17,7 @@ class UserService {
         return DB::transaction(function () use ($data) {
             $tmpPassword = Str::random(16);
             $user = $this->userRepository->create([...$data, 'password'=>$tmpPassword]);
-            // here will go the mail code
+            Mail::to($user->email)->send(new TempPasswordMail($tmpPassword, $user->email, $user->name));
             return $user;
         });
     }

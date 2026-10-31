@@ -17,10 +17,8 @@ class TempPasswordMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(public string $tmpPassword, public string $email, public string $name)
+    {}
 
     /**
      * Get the message envelope.
@@ -28,7 +26,7 @@ class TempPasswordMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Temp Password Mail',
+            subject: 'Your HRMS account details',
         );
     }
 
@@ -38,7 +36,7 @@ class TempPasswordMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'emails.temp-password',
         );
     }
 

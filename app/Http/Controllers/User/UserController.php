@@ -9,6 +9,7 @@ use App\Services\UserService;
 class UserController extends Controller
 {
     protected UserService $userService;
+
     public function __construct(UserService $userService) {
         $this->userService = $userService;
     }
@@ -18,12 +19,13 @@ class UserController extends Controller
     }
 
     public function store(StoreUserRequest $request) {
-        // $userData = $request->validated();
-        $user = $this->userService->createUser($request->validated());
-        return response([
-            'status' => 'success',
-            'data' => $user,
-            'message' => 'New user added!'
-        ], 201);
+        try{
+            $this->userService->createUser($request->validated());
+        }catch(\Throwable $e) {
+            report($e);
+            return back()->withErrors(['message' => 'Failed to create user. Try again']);
+        }
+        return redirect()->route('users.create')->with(['status' => 'User create. Temporary password sent to mail']);
+        
     }
 }

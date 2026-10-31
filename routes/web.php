@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Employee\ProfileController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\NoCache;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,8 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::get('/change-password', [ProfileController::class, 'showChangePassword'])->name('password.change');
     Route::post('/change-password', [ProfileController::class, 'updateChangePassword'])->name('password.change.update');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    //user related routes
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('can:employee.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store')->middleware('can:employee.create');
 });
