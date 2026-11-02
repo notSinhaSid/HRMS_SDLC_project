@@ -25,7 +25,7 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-           // role_id must be one of the roles the logged-in user is allowed to assign (recomputed each request, not trusted from the form)
+            // role_id must be one of the roles the logged-in user is allowed to assign (recomputed each request, not trusted from the form)
             'role_id' => ['required', 'integer', Rule::in($this->user()->role->assignableRoles()->pluck('id')->all())],
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email|max:255',
@@ -33,10 +33,10 @@ class StoreUserRequest extends FormRequest
     }
 
     #[Override]
-    public function attributes():array
+    public function attributes(): array
     {
         return [
-            'role_id' => 'role'
+            'role_id' => 'role',
         ];
     }
 }
