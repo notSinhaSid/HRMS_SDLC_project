@@ -11,39 +11,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Override;
+use Tests\Concerns\CreateUsers;
 use Tests\TestCase;
 
 class UserCreateTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    use RefreshDatabase;
+    use CreateUsers, RefreshDatabase;
 
     #[Override]
     protected function setUp(): void
     {
         parent::setUp();
         $this->seed(DatabaseSeeder::class);
-    }
-
-    /* public function test_example(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    } */
-
-    private function makeUser(string $roleName, array $overrides = []): User
-    {
-        return tap((new User)->forceFill(array_merge([
-            'role_id' => Role::where('name', $roleName)->value('id'),
-            'name' => 'Test User',
-            'email' => $roleName.'@hrms.com',
-            'password' => 'password123',
-            'status' => 'active',
-            'must_reset_password' => false,
-        ], $overrides)))->save();
     }
 
     public function test_employee_gets_403_on_create_user_page(): void
