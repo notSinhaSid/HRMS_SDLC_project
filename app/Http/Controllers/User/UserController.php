@@ -26,7 +26,7 @@ class UserController extends Controller
         } catch (\Throwable $e) {
             report($e);
 
-            return back()->withInput()->withErrors(['message' => 'Failed to create user. Please try again']);
+            return back()->withInput()->withErrors(['message' => 'Failed to create user. Please try again.']);
         }
 
         return redirect()->route('users.create')->with(['status' => 'User created. Temporary password sent by email']);
