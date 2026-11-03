@@ -2,16 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Override;
 use Tests\Concerns\CreateUsers;
 use Tests\TestCase;
-use App\Models\Role;
 
 class AuthTest extends TestCase
 {
-    use RefreshDatabase, CreateUsers;
+    use CreateUsers, RefreshDatabase;
 
     #[Override]
     protected function setUp(): void
@@ -35,15 +35,26 @@ class AuthTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_flagged_user_is_redirect_to_change_password(): void
+    public function test_flagged_user_is_redirected_to_change_password(): void
     {
         $forceChangePassword = $this->makeUser(Role::MANAGER, ['must_reset_password' => true]);
 
         $this->actingAs($forceChangePassword)->get(route('dashboard'))->assertRedirectToRoute('password.change');
     }
 
-    /* public function test_login_is_locked_after_five_failed_attempts(): void
+    public function test_login_locked_after_five_failed_attempts(): void
     {
-        //
-    } */
+        $employee = $this->makeUser(Role::EMPLOYEE);
+        for ($i = 0; $i < 5; $i++) {
+            $this->post(route('login'), [
+                'email' => $employee->email,
+                'password' => 'badAttempt123',
+            ]);
+        }
+        $this->post(route('login'), [
+            'email' => $employee->email,
+            'password' => 'password123',
+        ])->assertSessionHasErrors('message');
+        $this->assertGuest();
+    }
 }

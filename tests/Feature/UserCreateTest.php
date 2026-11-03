@@ -39,7 +39,6 @@ class UserCreateTest extends TestCase
         $this->actingAs($hr)->get(route('users.create'))->assertOk();
     }
 
-
     public function test_super_admin_bypasses_permission_check(): void
     {
         $superadmin = User::where('email', config('hrms.super_admin.email'))->firstOrFail();
