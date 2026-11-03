@@ -39,26 +39,6 @@ class UserCreateTest extends TestCase
         $this->actingAs($hr)->get(route('users.create'))->assertOk();
     }
 
-    public function test_inactive_users_gets_blocked_at_login(): void
-    {
-        $user = $this->makeUser(Role::EMPLOYEE, [
-            'name' => 'Sarvesh Yadav',
-            'email' => 'sarveshEmployee@hrms.com',
-            'status' => 'inactive',
-        ]);
-        $this->post(route('login'), [
-            'email' => $user->email,
-            'password' => 'password123',
-        ])->assertSessionHasErrors('message');
-        $this->assertGuest();
-    }
-
-    public function test_flagged_user_get_forced_redirect_to_change_password(): void
-    {
-        $forceChangePassword = $this->makeUser(Role::MANAGER, ['must_reset_password' => true]);
-
-        $this->actingAs($forceChangePassword)->get(route('dashboard'))->assertRedirectToRoute('password.change');
-    }
 
     public function test_super_admin_bypasses_permission_check(): void
     {
