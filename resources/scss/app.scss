@@ -1,0 +1,33 @@
+// Palette
+$brand-dark: #1e2730;
+$neutral: #414e5c;
+
+// Bootstrap import and overrides 
+$primary: #2563eb;
+$body-color: $neutral;
+$font-family-sans-serif: 'Inter', sans-serif;
+$border-radius: 0.5rem;
+$body-bg: #f4f6f8;
+$enable-shadows: false;
+
+// Icons and fonts
+@import 'bootstrap/scss/bootstrap';
+
+// custom scss importss here
+@import '_layout';
+@import '_guest';
+
+// icons and fonts here
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+
+  .sidebar-nav .nav-link {
+    --bs-nav-link-color: rgba(255, 255, 255, 0.7);
+    --bs-nav-link-hover-color: #fff;
+  }
+  .sidebar-nav .nav-link.active {
+    color: #fff;
+    background-color: $primary;
+  }
