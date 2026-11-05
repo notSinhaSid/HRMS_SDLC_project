@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
+use App\Http\Requests\UpdateChangePasswordRequest;
 
 class ProfileController extends Controller
 {
@@ -13,15 +12,10 @@ class ProfileController extends Controller
         return view('employees.profile.change-password');
     }
 
-    public function updateChangePassword(Request $request)
+    public function updateChangePassword(UpdateChangePasswordRequest $request)
     {
         $user = $request->user();
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::min(8)->mixedCase(), 'different:current_password'],
-            ['password.different' => 'New Password cannot be same as current password'],
-            ['password.confirmed' => 'Password and confirm password did not match'],
-        ]);
+        $validated = $request->validated();
 
         $user->forceFill([
             'password' => $validated['password'],

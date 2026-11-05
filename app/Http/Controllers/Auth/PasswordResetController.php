@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PasswordResetEmailSendLinkRequest;
+use App\Http\Requests\PasswordResetRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -15,14 +17,11 @@ class PasswordResetController extends Controller
         return view('auth.forgot-password');
     }
 
-    public function sendLink(Request $request)
+    public function sendLink(PasswordResetEmailSendLinkRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-        ]);
+        $credentials = $request->validated();
 
         $user = User::where('email', $credentials['email'])->first();
-        // dd($user);
         if (! $user) {
             return back()->withErrors(['email' => 'Email not found'])->onlyInput('email');
         }
@@ -47,13 +46,9 @@ class PasswordResetController extends Controller
         ]);
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(PasswordResetRequest $request)
     {
-        $credentials = $request->validate([
-            'token' => 'required|string',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $credentials = $request->validated();
 
         $status = Password::reset($request->only(
             'email', 'password', 'password_confirmation', 'token') + ['status' => 'active'], function (User $user, string $password) {
