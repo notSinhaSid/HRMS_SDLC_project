@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
+use Override;
 
 class UpdateChangePasswordRequest extends FormRequest
 {
@@ -26,8 +27,15 @@ class UpdateChangePasswordRequest extends FormRequest
         return [
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase(), 'different:current_password'],
-            ['password.different' => 'New Password cannot be same as current password'],
-            ['password.confirmed' => 'Password and confirm password did not match'],
+        ];
+    }
+
+    #[Override]
+    public function messages()
+    {
+        return [
+            'password.different' => 'New Password cannot be same as current password',
+            'password.confirmed' => 'Password and confirm password did not match'
         ];
     }
 }
