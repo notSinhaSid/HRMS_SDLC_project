@@ -26,7 +26,7 @@ class PasswordResetRequest extends FormRequest
         return [
             'token' => 'required|string',
             'email' => 'required|email',
-            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()],
+            'password' => ['required', 'confirmed', Password::defaults()],
         ];
     }
 }

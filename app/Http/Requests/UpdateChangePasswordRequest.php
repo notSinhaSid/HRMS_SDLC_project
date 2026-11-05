@@ -26,16 +26,16 @@ class UpdateChangePasswordRequest extends FormRequest
     {
         return [
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::min(8)->mixedCase(), 'different:current_password'],
+            'password' => ['required', 'confirmed', Password::defaults(), 'different:current_password'],
         ];
     }
 
     #[Override]
-    public function messages()
+    public function messages(): array
     {
         return [
             'password.different' => 'New Password cannot be same as current password',
-            'password.confirmed' => 'Password and confirm password did not match'
+            'password.confirmed' => 'Password and confirm password did not match',
         ];
     }
 }
