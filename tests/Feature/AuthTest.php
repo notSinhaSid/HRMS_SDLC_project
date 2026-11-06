@@ -55,6 +55,7 @@ class AuthTest extends TestCase
             'email' => $employee->email,
             'password' => 'password123',
         ])->assertSessionHasErrors('message');
+        $this->assertStringStartsWith('Too many attempts.' , session('errors')->first('message'));
         $this->assertGuest();
     }
 }
