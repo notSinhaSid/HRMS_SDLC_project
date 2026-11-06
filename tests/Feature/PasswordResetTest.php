@@ -65,7 +65,7 @@ class PasswordResetTest extends TestCase
         ];
         $this->post(route('password.update'), $payload)->assertRedirectToRoute('login');
 
-        $this->post(route('password.update'), $payload)->assertSessionHasErrors('message');
+        $this->post(route('password.update'), $payload)->assertSessionHasErrors(['message' => __('passwords.token')]);
         $this->assertTrue(Hash::check($newPassword, $employee->fresh()->password));
     }
 

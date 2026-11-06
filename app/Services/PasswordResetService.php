@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\ResetPasswordResult;
 use App\Enums\SendLinkResult;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class PasswordResetService
 {
@@ -21,11 +23,29 @@ class PasswordResetService
 
         $status = Password::sendResetLink(['email' => $data['email'], 'status' => 'active']);
 
-        if ($status === Password::RESET_LINK_SENT) {
+        return match ($status) {
+            Password::RESET_LINK_SENT => SendLinkResult::Sent,
+            Password::RESET_THROTTLED => SendLinkResult::Throttled,
+            default => SendLinkResult::NotFound
+        };
+    }
 
-            return SendLinkResult::Sent;
+    public function resetPassword(array $data): ResetPasswordResult
+    {
+        $status = Password::reset($data + ['status' => 'active'], function (User $user, string $password) {
+            $user->forceFill(['password' => $password]);
+            $user->setRememberToken(Str::random(60));
+            $user->save();
+        });
+
+        if ($status === Password::PASSWORD_RESET) {
+            return ResetPasswordResult::Reset;
         }
 
-        return SendLinkResult::Throttled;
+        if ($status === Password::INVALID_TOKEN) {
+            return ResetPasswordResult::InvalidToken;
+        }
+
+        return ResetPasswordResult::InvalidUser;
     }
 }

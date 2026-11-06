@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ResetPasswordResult;
 use App\Enums\SendLinkResult;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PasswordResetEmailSendLinkRequest;
 use App\Http\Requests\PasswordResetRequest;
-use App\Models\User;
 use App\Services\PasswordResetService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
@@ -43,19 +41,12 @@ class PasswordResetController extends Controller
 
     public function updatePassword(PasswordResetRequest $request)
     {
-        $credentials = $request->validated();
+        $result = $this->passwordResetService->resetPassword($request->validated());
 
-        $status = Password::reset($request->only(
-            'email', 'password', 'password_confirmation', 'token') + ['status' => 'active'], function (User $user, string $password) {
-                $user->forceFill(['password' => $password]);
-                $user->setRememberToken(Str::random(60));
-                $user->save();
-            });
-
-        if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
-        }
-
-        return back()->withErrors(['message' => __($status)])->onlyInput('email');
+        return match ($result) {
+            ResetPasswordResult::InvalidToken => back()->withErrors(['message' => __('passwords.token')])->onlyInput('email'),
+            ResetPasswordResult::InvalidUser => back()->withErrors(['message' => __('passwords.user')])->onlyInput('email'),
+            ResetPasswordResult::Reset => redirect()->route('login')->with('status', __('passwords.reset'))
+        };
     }
 }
