@@ -8,5 +8,5 @@ enum LoginResult
     case InvalidCredentials;
     case Deactivated;
     case LockedOut;
-    
+
 }

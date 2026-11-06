@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\LoginResult;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
-use App\Enums\LoginResult;
 
 class AuthController extends Controller
 {
     public function __construct(private AuthService $authService) {}
+
     public function showLogin()
     {
         return view('auth.login');
@@ -23,12 +22,13 @@ class AuthController extends Controller
     {
         $result = $this->authService->login($request->validated(), $request->ip());
 
-        if($result === LoginResult::Success) {
+        if ($result === LoginResult::Success) {
             $request->session()->regenerate();
+
             return redirect()->intended(route('dashboard'));
         }
 
-        if($result === LoginResult::Deactivated) {
+        if ($result === LoginResult::Deactivated) {
             $request->session()->invalidate();
             $request->session()->regenerateToken();
         }
