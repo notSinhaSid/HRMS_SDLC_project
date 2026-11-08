@@ -36,9 +36,9 @@ class AuthController extends Controller
         $seconds = $result === LoginResult::LockedOut ? $this->authService->lockoutSeconds($request->email, $request->ip()) : 0;
 
         return match ($result) {
-            LoginResult::InvalidCredentials => back()->withErrors(['message' => 'Invalid credentials'])->onlyInput('email'),
-            LoginResult::LockedOut => back()->withErrors(['message' => "Too many attempts. Try again in {$seconds} seconds"])->onlyInput('email'),
-            LoginResult::Deactivated => back()->withErrors(['message' => 'Account deactivated. Contact Support'])->onlyInput('email'),
+            LoginResult::InvalidCredentials => back()->withErrors(['message' => __('messages.auth.invalid_credentials')])->onlyInput('email'),
+            LoginResult::LockedOut => back()->withErrors(['message' => __('messages.auth.lockedout', ['seconds' => $seconds])])->onlyInput('email'),
+            LoginResult::Deactivated => back()->withErrors(['message' => __('messages.auth.deactivated')])->onlyInput('email'),
             LoginResult::Success => redirect()->intended(route('dashboard'))
         };
 
