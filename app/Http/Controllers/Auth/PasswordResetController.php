@@ -2,41 +2,33 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ResetPasswordResult;
+use App\Enums\SendLinkResult;
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\PasswordResetEmailSendLinkRequest;
+use App\Http\Requests\PasswordResetRequest;
+use App\Services\PasswordResetService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
+    public function __construct(private PasswordResetService $passwordResetService) {}
+
     public function showForgot()
     {
         return view('auth.forgot-password');
     }
 
-    public function sendLink(Request $request)
+    public function sendLink(PasswordResetEmailSendLinkRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-        ]);
+        $result = $this->passwordResetService->sendLink($request->validated());
 
-        $user = User::where('email', $credentials['email'])->first();
-        // dd($user);
-        if (! $user) {
-            return back()->withErrors(['email' => 'Email not found'])->onlyInput('email');
-        }
-        if ($user->status !== 'active') {
-            return back()->withErrors(['message' => 'Account deactivated. Contact Support'])->onlyInput('email');
-        }
-
-        $status = Password::sendResetLink(['email' => $user->email, 'status' => 'active']);
-
-        if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
-        }
-
-        return back()->withErrors(['message' => __($status)])->onlyInput('email');
+        return match ($result) {
+            SendLinkResult::NotFound => back()->withErrors(['email' => __('messages.password.email_not_found')])->onlyInput('email'),
+            SendLinkResult::Deactivated => back()->withErrors(['message' => __('messages.auth.deactivated')])->onlyInput('email'),
+            SendLinkResult::Throttled => back()->withErrors(['message' => __('passwords.throttled')])->onlyInput('email'),
+            SendLinkResult::Sent => back()->with('status', __('passwords.sent')),
+        };
     }
 
     public function resetPassword(Request $request, string $token)
@@ -47,25 +39,14 @@ class PasswordResetController extends Controller
         ]);
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(PasswordResetRequest $request)
     {
-        $credentials = $request->validate([
-            'token' => 'required|string',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $result = $this->passwordResetService->resetPassword($request->validated());
 
-        $status = Password::reset($request->only(
-            'email', 'password', 'password_confirmation', 'token') + ['status' => 'active'], function (User $user, string $password) {
-                $user->forceFill(['password' => $password]);
-                $user->setRememberToken(Str::random(60));
-                $user->save();
-            });
-
-        if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
-        }
-
-        return back()->withErrors(['message' => __($status)])->onlyInput('email');
+        return match ($result) {
+            ResetPasswordResult::InvalidToken => back()->withErrors(['message' => __('passwords.token')])->onlyInput('email'),
+            ResetPasswordResult::InvalidUser => back()->withErrors(['message' => __('passwords.user')])->onlyInput('email'),
+            ResetPasswordResult::Reset => redirect()->route('login')->with('status', __('passwords.reset'))
+        };
     }
 }

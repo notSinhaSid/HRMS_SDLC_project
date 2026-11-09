@@ -2,52 +2,45 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\LoginResult;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    public function __construct(private AuthService $authService) {}
+
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $result = $this->authService->login($request->validated(), $request->ip());
 
-        $key = Str::lower($request->email).'|'.$request->ip();
+        if ($result === LoginResult::Success) {
+            $request->session()->regenerate();
 
-        if (RateLimiter::tooManyAttempts($key, $maxAttempts = 5)) {
-            $seconds = RateLimiter::availableIn($key);
-
-            return back()->withErrors(['message' => "Too many attempts. Try again in {$seconds} seconds"])->onlyInput('email');
+            return redirect()->intended(route('dashboard'));
         }
 
-        if (! Auth::attempt($credentials)) {
-            RateLimiter::hit($key, $decaySeconds = 60);
-
-            return back()->withErrors(['message' => 'Invalid credentials'])->onlyInput('email');
-        }
-        if (Auth::user()->status !== 'active') {
-            Auth::logout();
+        if ($result === LoginResult::Deactivated) {
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-
-            return back()->withErrors(['message' => 'Account deactivated. Contact Support'])->onlyInput('email');
         }
 
-        RateLimiter::clear($key);
+        $seconds = $result === LoginResult::LockedOut ? $this->authService->lockoutSeconds($request->email, $request->ip()) : 0;
 
-        $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard'));
+        return match ($result) {
+            LoginResult::InvalidCredentials => back()->withErrors(['message' => __('messages.auth.invalid_credentials')])->onlyInput('email'),
+            LoginResult::LockedOut => back()->withErrors(['message' => __('messages.auth.lockedout', ['seconds' => $seconds])])->onlyInput('email'),
+            LoginResult::Deactivated => back()->withErrors(['message' => __('messages.auth.deactivated')])->onlyInput('email'),
+            LoginResult::Success => redirect()->intended(route('dashboard'))
+        };
 
     }
 

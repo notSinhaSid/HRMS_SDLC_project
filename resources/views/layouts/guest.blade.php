@@ -24,6 +24,5 @@
             </div>
         </div>
     </main>
-    @vite(['resources/js/guest.js'])
 </body>
 </html>
