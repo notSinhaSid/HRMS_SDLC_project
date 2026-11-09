@@ -24,8 +24,8 @@ class PasswordResetController extends Controller
         $result = $this->passwordResetService->sendLink($request->validated());
 
         return match ($result) {
-            SendLinkResult::NotFound => back()->withErrors(['email' => 'Email not found'])->onlyInput('email'),
-            SendLinkResult::Deactivated => back()->withErrors(['message' => 'Account deactivated. Contact Support'])->onlyInput('email'),
+            SendLinkResult::NotFound => back()->withErrors(['email' => __('messages.password.email_not_found')])->onlyInput('email'),
+            SendLinkResult::Deactivated => back()->withErrors(['message' => __('messages.auth.deactivated')])->onlyInput('email'),
             SendLinkResult::Throttled => back()->withErrors(['message' => __('passwords.throttled')])->onlyInput('email'),
             SendLinkResult::Sent => back()->with('status', __('passwords.sent')),
         };

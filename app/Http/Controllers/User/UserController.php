@@ -22,14 +22,13 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-            $this->userService->createUser($request->validated());
+            $user = $this->userService->createUser($request->validated());
         } catch (\Throwable $e) {
             report($e);
 
-            return back()->withInput()->withErrors(['message' => 'Failed to create user. Please try again.']);
+            return back()->withInput()->withErrors(['message' => __('messages.users.create_failed')]);
         }
 
-        return redirect()->route('users.create')->with(['status' => 'User created. Temporary password sent by email']);
-
+        return redirect()->route('users.create')->with('status', __('messages.users.create_success', ['email' => $user->email]));
     }
 }
