@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\NoCache;
@@ -30,4 +31,9 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     // user related routes
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('can:employee.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store')->middleware('can:employee.create');
+
+    //department routes
+    Route::resource('departments', DepartmentController::class)->only(['index'])->middleware('can:department.view');
+    Route::resource('departments', DepartmentController::class)->only(['create', 'store'])->middleware('can:department.create');
+    Route::resource('departments', DepartmentController::class)->only(['edit', 'update'])->middleware('can:department.update');
 });
