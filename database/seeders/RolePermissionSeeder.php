@@ -14,7 +14,7 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         $map = [
-            Role::HR => Permission::employee(),
+            Role::HR => [...Permission::employee(), ...Permission::department(), ...Permission::designation()],
             Role::MANAGER => [],
             Role::EMPLOYEE => [],
         ];
