@@ -15,5 +15,6 @@ return [
     ],
     'departments' => [
         'create_success' => 'Department :name created.',
+        'update_success' => 'Department :name updated.',
     ],
 ];
