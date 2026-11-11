@@ -7,6 +7,7 @@
         <li><a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active': '' }}">Dashboard</a></li>
         @can('employee.create')
              <li><a href="{{ route('users.create') }}" class="nav-link {{ request()->routeIs('users.create') ? 'active': '' }}">Add user</a></li>
+             <li><a href="{{ route('departments.create') }}" class="nav-link {{ request()->routeIs('departments.create') ? 'active': '' }}">Departments</a></li>
         @endcan
     </ul>
 </nav>

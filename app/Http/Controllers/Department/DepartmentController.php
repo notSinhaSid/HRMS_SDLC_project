@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Department;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Department\StoreDepartmentRequest;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -12,7 +14,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        return view('departments.index');
     }
 
     /**
@@ -20,15 +22,17 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('departments.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreDepartmentRequest $request)
     {
-        //
+        $department = Department::create($request->validated());
+
+        return redirect()->route('departments.index')->with(['status' => __('messages.departments.create_success', ['name' => $department->name])]);
     }
 
     /**

@@ -13,4 +13,7 @@ return [
         'create_failed' => 'Failed to create user. Please try again.',
         'create_success' => 'User created. Temporary password sent to :email',
     ],
+    'departments' => [
+        'create_success' => 'Department :name created.',
+    ],
 ];

@@ -32,7 +32,7 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('can:employee.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store')->middleware('can:employee.create');
 
-    //department routes
+    // department routes
     Route::resource('departments', DepartmentController::class)->only(['index'])->middleware('can:department.view');
     Route::resource('departments', DepartmentController::class)->only(['create', 'store'])->middleware('can:department.create');
     Route::resource('departments', DepartmentController::class)->only(['edit', 'update'])->middleware('can:department.update');
