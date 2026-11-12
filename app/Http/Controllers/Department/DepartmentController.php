@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Department\StoreDepartmentRequest;
 use App\Http\Requests\Department\UpdateDepartmentRequest;
 use App\Models\Department;
+use App\Services\DepartmentService;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(private DepartmentService $departmentService) {}
+
     public function index()
     {
         $departments = Department::all();
@@ -32,7 +32,7 @@ class DepartmentController extends Controller
      */
     public function store(StoreDepartmentRequest $request)
     {
-        $department = Department::create($request->validated());
+        $department = $this->departmentService->store($request->validated());
 
         return redirect()->route('departments.index')->with(['status' => __('messages.departments.create_success', ['name' => $department->name])]);
     }
@@ -56,9 +56,9 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepartmentRequest $request, Department $department)
+    public function update(Department $department, UpdateDepartmentRequest $request)
     {
-        $department->update($request->validated());
+        $department = $this->departmentService->update($department, $request->validated());
 
         return redirect()->route('departments.index')->with(['status' => __('messages.departments.update_success', ['name' => $department->name])]);
     }
