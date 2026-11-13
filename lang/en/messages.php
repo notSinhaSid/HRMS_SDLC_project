@@ -17,4 +17,8 @@ return [
         'create_success' => 'Department :name created.',
         'update_success' => 'Department :name updated.',
     ],
+    'designations' => [
+        'create_success' => ':name designation added.',
+        'update_sucess' => ':name designation updated.',
+    ],
 ];

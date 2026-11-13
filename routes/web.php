@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Department\DepartmentController;
+use App\Http\Controllers\Designation\DesignationController;
 use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\NoCache;
@@ -36,4 +37,9 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::resource('departments', DepartmentController::class)->only(['index'])->middleware('can:department.view');
     Route::resource('departments', DepartmentController::class)->only(['create', 'store'])->middleware('can:department.create');
     Route::resource('departments', DepartmentController::class)->only(['edit', 'update'])->middleware('can:department.update');
+
+    // designation routes
+    Route::resource('designations', DesignationController::class)->only(['index'])->middleware('can:designation.view');
+    Route::resource('designations', DesignationController::class)->only(['create', 'store'])->middleware('can:designation.create');
+    Route::resource('designations', DesignationController::class)->only(['edit', 'update'])->middleware('can:designation.update');
 });
