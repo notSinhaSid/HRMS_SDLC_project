@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\Designation\DesignationController;
+use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\NoCache;
@@ -42,4 +43,9 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::resource('designations', DesignationController::class)->only(['index'])->middleware('can:designation.view');
     Route::resource('designations', DesignationController::class)->only(['create', 'store'])->middleware('can:designation.create');
     Route::resource('designations', DesignationController::class)->only(['edit', 'update'])->middleware('can:designation.update');
+
+    // employee routes
+    Route::resource('employees', EmployeeController::class)->only(['index'])->middleware('can:employee.view');
+    Route::resource('employees', EmployeeController::class)->only(['create', 'store'])->middleware('can:employee.create');
+    Route::resource('employees', EmployeeController::class)->only(['edit', 'update'])->middleware('can:employee.update');
 });
