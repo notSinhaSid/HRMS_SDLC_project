@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
+use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
@@ -17,9 +18,8 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        /* $emp = new Employee();
-        $emp->department->name; */
-        $employees = Employee::with(['users','departments','designations'])->get();
+        $employees = Employee::with(['user', 'department', 'designation'])->get();
+
         return view('employees.index', compact('employees'));
     }
 
@@ -64,17 +64,25 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Employee $employee)
     {
-        //
+        return view('employees.edit', compact('employee'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Employee $employee, UpdateEmployeeRequest $request)
     {
-        //
+        try {
+            $employee = $this->employeeService->update($employee, $request->validated());
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withErrors(['message' => __('messages.employees.update_failed')]);
+        }
+
+        return redirect()->route('employees.index')->with(['message' => __('messages.employees.update_success', ['name' => $employee->user->name])]);
     }
 
     /**
