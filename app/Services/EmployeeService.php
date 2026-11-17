@@ -12,7 +12,7 @@ class EmployeeService
         return DB::transaction(function () use ($data) {
             $employee = new Employee;
             $employee->forceFill($data)->save();
-            $employee->forceFill(['employee_code' => sprintf('EMP%04', $employee->id)])->save();
+            $employee->forceFill(['employee_code' => sprintf('EMP%04d', $employee->id)])->save();
 
             return $employee;
         });
