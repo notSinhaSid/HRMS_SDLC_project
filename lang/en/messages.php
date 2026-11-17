@@ -25,5 +25,6 @@ return [
         'create_success' => 'Employee :name added',
         'create_failed' => 'Failed. Please try again.',
         'update_success' => 'Employee :name updated',
+        'update_failed' => 'Failed to update. Try again.',
     ],
 ];
