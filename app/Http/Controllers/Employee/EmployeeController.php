@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\Employee;
 use App\Models\User;
 use App\Services\EmployeeService;
 use Illuminate\Http\Request;
@@ -16,7 +17,10 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        return view('employees.index');
+        /* $emp = new Employee();
+        $emp->department->name; */
+        $employees = Employee::with(['users','departments','designations'])->get();
+        return view('employees.index', compact('employees'));
     }
 
     /**
