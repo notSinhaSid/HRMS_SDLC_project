@@ -19,6 +19,11 @@ return [
     ],
     'designations' => [
         'create_success' => ':name designation added.',
-        'update_sucess' => ':name designation updated.',
+        'update_success' => ':name designation updated.',
+    ],
+    'employees' => [
+        'create_success' => 'Employee :name added',
+        'create_failed' => 'Failed. Please try again.',
+        'update_success' => 'Employee :name updated',
     ],
 ];

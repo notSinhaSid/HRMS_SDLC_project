@@ -45,7 +45,7 @@ class DesignationController extends Controller
     {
         $designation = $this->designationService->update($designation, $request->validated());
 
-        return redirect()->route('designations.index')->with('status', __('messages.designations.update_sucess', ['name' => $designation->name]));
+        return redirect()->route('designations.index')->with('status', __('messages.designations.update_success', ['name' => $designation->name]));
     }
 
     public function destroy(string $id)
