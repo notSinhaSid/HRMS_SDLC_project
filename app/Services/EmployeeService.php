@@ -20,7 +20,8 @@ class EmployeeService
 
     public function update(Employee $employee, array $data): Employee
     {
-        // code here for update
+        $employee->update($data);
+
         return $employee;
     }
 }
