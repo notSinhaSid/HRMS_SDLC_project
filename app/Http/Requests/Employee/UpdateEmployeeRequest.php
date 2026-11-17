@@ -8,9 +8,6 @@ use Illuminate\Validation\Rule;
 
 class UpdateEmployeeRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
@@ -31,7 +28,7 @@ class UpdateEmployeeRequest extends FormRequest
             'gender' => ['nullable', Rule::in(['male', 'female', 'others'])],
             'date_of_birth' => ['nullable', 'date', 'before:today'],
             'date_of_joining' => ['required', 'date'],
-            'date_of_leaving' => ['nullable', 'date', 'after_or_equal:date_of_joinig'],
+            'date_of_leaving' => ['nullable', 'date', 'after_or_equal:date_of_joining'],
         ];
     }
 }

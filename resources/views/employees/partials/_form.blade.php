@@ -1,19 +1,4 @@
 <div class="mb-3">
-    <label for="user_id" class="form-label">User</label>
-    <select name="user_id" id="user_id" class="form-select @error('user_id')
-        is-invalid
-    @enderror">
-        <option value="" unselectable>Select User</option>
-        @foreach ($availableUsers as $user)
-            <option value="{{ $user->id }}" @selected(old('user_id', $employee->user_id ?? '') == $user->id)>{{$user->name}}</option>
-        @endforeach
-    </select>
-    @error('user_id')
-        <span class="text-danger">{{ $message }}</span>
-    @enderror
-</div>
-
-<div class="mb-3">
     <label for="department_id" class="form-select-label">Department</label>
     <select name="department_id" id="department_id" class="form-select @error('department_id')
         is-invalid
