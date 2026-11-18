@@ -64,12 +64,14 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Employee $employee, Request $request)
+    public function edit(Employee $employee)
     {
-        $availableUsers = User::availableForEmployee($request->user())->orderBy('name')->get();
-        $departments = Department::where('is_active', true)->orderBy('name')->get();
+        $departments = Department::where(function ($q) use ($employee) {
+            $q->where('is_active', true)->orWhere('id', $employee->department_id);
+        })->orderBy('name')->get();
         $designations = Designation::orderBy('name')->get();
-        return view('employees.edit', compact('employee'), compact(['availableUsers', 'departments', 'designations']));
+
+        return view('employees.edit', compact(['employee', 'departments', 'designations']));
     }
 
     /**
@@ -83,7 +85,7 @@ class EmployeeController extends Controller
             report($e);
 
             return back()->withErrors(['message' => __('messages.employees.update_failed')])
-            ->withInput($request->only(['user_id', 'department_id', 'designation_id', 'phone', 'address', 'gender', 'date_of_birth', 'date_of_joining','date_of_leaving']));
+                ->withInput($request->only(['department_id', 'designation_id', 'phone', 'address', 'gender', 'date_of_birth', 'date_of_joining', 'date_of_leaving']));
         }
 
         return redirect()->route('employees.index')->with(['status' => __('messages.employees.update_success', ['name' => $employee->user->name])]);
