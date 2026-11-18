@@ -30,7 +30,7 @@
                 <td>{{ $employee->address ?? 'To be added.' }}</td>
                 <td>{{ $employee->gender ?? 'To be added.' }}</td>
                 <td>{{ $employee->date_of_birth?->toFormattedDateString() ?? 'To be added.' }}</td>
-                <td>{{ $employee->date_of_joining->toFormattedDateString() ?? 'To be added.' }}</td>
+                <td>{{ $employee->date_of_joining?->toFormattedDateString() ?? 'To be added.' }}</td>
                 
                 <td>
                     <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary btn-sm">Edit</a>
