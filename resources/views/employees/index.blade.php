@@ -10,10 +10,6 @@
             <th>Department</th>
             <th>Designation</th>
             <th>Employee code</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Gender</th>
-            <th>Date of birth</th>
             <th>Date of joining</th>
             <th>Actions</th>
         </tr>
@@ -26,10 +22,6 @@
                 <td>{{ $employee->department->name ?? 'Not assigned yet.' }}</td>
                 <td>{{ $employee->designation->name ?? 'Not assigned yet.' }}</td>
                 <td>{{ $employee->employee_code }}</td>
-                <td>{{ $employee->phone ?? 'To be added.' }}</td>
-                <td>{{ $employee->address ?? 'To be added.' }}</td>
-                <td>{{ $employee->gender ?? 'To be added.' }}</td>
-                <td>{{ $employee->date_of_birth?->toFormattedDateString() ?? 'To be added.' }}</td>
                 <td>{{ $employee->date_of_joining?->toFormattedDateString() ?? 'To be added.' }}</td>
                 
                 <td>
