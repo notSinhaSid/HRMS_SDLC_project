@@ -24,4 +24,12 @@ class EmployeeService
 
         return $employee;
     }
+
+    public function offboard(Employee $employee, array $data): void
+    {
+        DB::transaction(function () use ($employee, $data) {
+            $employee->update(['date_of_leaving' => $data['date_of_leaving']]);
+            $employee->user->forceFill(['status' => 'inactive'])->save();
+        });
+    }
 }
