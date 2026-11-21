@@ -7,6 +7,9 @@
         <li><a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active': '' }}">Dashboard</a></li>
         @can('employee.create')
              <li><a href="{{ route('users.create') }}" class="nav-link {{ request()->routeIs('users.create') ? 'active': '' }}">Add user</a></li>
+             <li><a href="{{ route('departments.index') }}" class="nav-link {{ request()->routeIs('departments.index') ? 'active': '' }}">Departments</a></li>
+             <li><a href="{{ route('designations.index') }}" class="nav-link {{ request()->routeIs('designations.index') ? 'active': '' }}">Designations</a></li>
+             <li><a href="{{ route('employees.index') }}" class="nav-link {{ request()->routeIs('employees.index') ? 'active': '' }}">Employees</a></li>
         @endcan
     </ul>
 </nav>
