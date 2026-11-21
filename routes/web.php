@@ -8,7 +8,6 @@ use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\NoCache;
-use App\Models\Employee;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
@@ -49,5 +48,5 @@ Route::middleware(['auth', NoCache::class, 'user-status-check', 'force-change-pa
     Route::resource('employees', EmployeeController::class)->only(['index'])->middleware('can:employee.view');
     Route::resource('employees', EmployeeController::class)->only(['create', 'store'])->middleware('can:employee.create');
     Route::resource('employees', EmployeeController::class)->only(['edit', 'update'])->middleware('can:employee.update');
-    Route::post('employees/{employee}/offboard', [Employee::class, 'offboard'])->name('employee.offboard')->middleware('can:employee.update');
+    Route::post('employees/{employee}/offboard', [EmployeeController::class, 'offboard'])->name('employees.offboard')->middleware('can:employee.update');
 });
