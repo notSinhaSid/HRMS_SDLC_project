@@ -90,12 +90,5 @@ class EmployeeController extends Controller
 
         return redirect()->route('employees.index')->with(['status' => __('messages.employees.update_success', ['name' => $employee->user->name])]);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 }
