@@ -22,7 +22,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
 });
 
-Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(function () {
+Route::middleware(['auth', NoCache::class, 'user-status-check', 'force-change-password'])->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
     // password reset
