@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Employee;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -19,11 +18,6 @@ class OffboardEmployeeRequest extends FormRequest
         return in_array($roleId, $this->user()->role->assignableRoles()->pluck('id')->all(), true);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
