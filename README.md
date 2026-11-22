@@ -3,16 +3,19 @@
 Human Resource Management System built with Laravel 13, MySQL, Blade and Bootstrap 5.
 Built as an SDLC project at Webskitters Academy.
 
-**Status:** Phase 1 (authentication and access control) complete. Employee, attendance and leave modules are planned.
+**Status:** Phase 1 (authentication and access control) and Phase 2 (organisation and employees) complete. Attendance and leave modules are planned.
 
-## Features (Phase 1)
+## Features
 
 - Session login and logout, with rate limiting (5 attempts per minute)
 - Forgot and reset password (expiring, single-use tokens)
 - Role-based access control: 4 roles, permission checks on routes and views
 - Forced password change on first login
 - Create user: HR or Super Admin creates an account, and a temporary password is sent by email
-- Feature tests (PHPUnit, in-memory SQLite)
+- Departments and designations: create, list, edit
+- Employees: create from an existing user account, list, edit, with auto-generated employee codes (`EMP0001` format)
+- Offboarding: HR or Super Admin offboards an employee from the employees list (modal); the account is deactivated and the leaving date recorded. A deactivated user is logged out on their next request.
+- Feature tests (PHPUnit, in-memory SQLite): 47 tests, 173 assertions
 
 ## Tech stack
 
@@ -21,8 +24,8 @@ Laravel 13, PHP 8.4, MySQL, Blade, Bootstrap 5 (Vite + Sass)
 ## Setup
 
 ```bash
-git clone TODO-repo-url
-cd TODO-folder
+git clone https://github.com/notSinhaSid/HRMS_SDLC_project.git
+cd HRMS_SDLC_project
 composer install
 npm install
 cp .env.example .env
@@ -56,8 +59,10 @@ Use a strong password in production.
 |---|---|---|
 | Super Admin | HR, Manager, Employee | Everything (bypasses permission checks) |
 | HR | Manager, Employee | `employee.view`, `employee.create`, `employee.update`, `employee.delete` |
-| Manager | none | none yet (team view planned for Phase 2) |
+| Manager | none | none yet (team view planned) |
 | Employee | none | none yet |
+
+Offboarding uses `employee.update`. HR cannot offboard a Super Admin or their own record.
 
 ## Tests
 
@@ -69,5 +74,6 @@ Tests use in-memory SQLite and never touch the `hrms` database.
 
 ## Known gaps
 
-- Activating or deactivating a user is not in the UI yet (Tinker only). Planned for Phase 2.
-- Employee, department, attendance and leave modules are not built yet.
+- Reactivating an offboarded employee is not in the UI yet (Tinker or SQL only).
+- A future leaving date still deactivates the account immediately (no scheduled deactivation).
+- Attendance, leave, audit trail and payroll modules are not built yet.
