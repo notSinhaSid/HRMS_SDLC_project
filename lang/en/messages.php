@@ -26,5 +26,8 @@ return [
         'create_failed' => 'Failed. Please try again.',
         'update_success' => 'Employee :name updated',
         'update_failed' => 'Failed to update. Try again.',
+        'offboard_failed' => 'Failed to offboard :name. Please try again.',
+        'offboard_success' => ':name has been offboarded.',
+        'already_offboarded' => ':name is already offboarded.',
     ],
 ];

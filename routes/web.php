@@ -22,7 +22,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
 });
 
-Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(function () {
+Route::middleware(['auth', NoCache::class, 'user-status-check', 'force-change-password'])->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
     // password reset
@@ -48,4 +48,5 @@ Route::middleware(['auth', NoCache::class, 'force-change-password'])->group(func
     Route::resource('employees', EmployeeController::class)->only(['index'])->middleware('can:employee.view');
     Route::resource('employees', EmployeeController::class)->only(['create', 'store'])->middleware('can:employee.create');
     Route::resource('employees', EmployeeController::class)->only(['edit', 'update'])->middleware('can:employee.update');
+    Route::post('employees/{employee}/offboard', [EmployeeController::class, 'offboard'])->name('employees.offboard')->middleware('can:employee.update');
 });

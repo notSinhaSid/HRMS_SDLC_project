@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Employee\OffboardEmployeeRequest;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Models\Department;
@@ -91,11 +92,16 @@ class EmployeeController extends Controller
         return redirect()->route('employees.index')->with(['status' => __('messages.employees.update_success', ['name' => $employee->user->name])]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function offboard(Employee $employee, OffboardEmployeeRequest $request)
     {
-        //
+        try {
+            $this->employeeService->offboard($employee, $request->validated());
+
+            return redirect()->route('employees.index')->with(['status' => __('messages.employees.offboard_success', ['name' => $employee->user->name])]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withErrors(['message' => __('messages.employees.offboard_failed', ['name' => $employee->user->name])]);
+        }
     }
 }

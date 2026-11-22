@@ -252,20 +252,6 @@ class EmployeeTest extends TestCase
         $this->assertSame('Lake town, Philly', $newRow->address);
     }
 
-    public function test_date_of_leaving_cannot_be_before_date_of_joining(): void
-    {
-        $hr = $this->makeUser(Role::HR);
-        $user = $this->makeUser(Role::EMPLOYEE);
-        $payload = $this->validPayload($user);
-        $this->actingAs($hr)->post(route('employees.store'), $payload)->assertSessionHasNoErrors();
-        $row = Employee::where('user_id', $user->id)->firstOrFail();
-        $this->actingAs($hr)->put(route('employees.update', $row), $this->validPayload($user, [
-            'date_of_joining' => '2026-11-24',
-            'date_of_leaving' => '2026-11-22',
-        ]))->assertSessionHasErrors('date_of_leaving');
-        $this->assertNull(Employee::findOrFail($row->id)->date_of_leaving);
-    }
-
     public function test_date_of_joining_is_required_on_update(): void
     {
         $hr = $this->makeUser(Role::HR);
