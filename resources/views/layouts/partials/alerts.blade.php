@@ -10,3 +10,9 @@
     </div>
     
 @endif
+
+@error('date_of_leaving')
+    <div class="alert alert-danger">
+        {{ $message }}
+    </div>
+@enderror
