@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Override;
 use Tests\Concerns\CreateUsers;
 use Tests\TestCase;
@@ -63,5 +64,24 @@ class AuditableTest extends TestCase
         $this->assertSame('updated', $log->action);
         $this->assertSame(['phone' => '1001100111'], $log->new_values);
         $this->assertSame(['phone' => '9900990090'], $log->old_values);
+    }
+
+    public function test_password_change_never_stores_the_hash(): void
+    {
+        $user = $this->makeUser(Role::EMPLOYEE, ['must_reset_password' => true]);
+        $this->actingAs($user)->post(route('password.change.update'), [
+            'current_password' => 'password123',
+            'password' => 'newPassword123',
+            'password_confirmation' => 'newPassword123',
+        ])->assertRedirectToRoute('dashboard')->assertSessionHasNoErrors();
+        $query = AuditLog::where('auditable_type', User::class)->where('auditable_id', $user->id)->where('action', 'updated');
+        $count = $query->count();
+        $this->assertSame(1, $count);
+        $log = $query->firstOrFail();
+        $this->assertTrue(Hash::check('newPassword123', $user->fresh()->password));
+        $this->assertArrayNotHasKey('password', $log->new_values);
+        $this->assertArrayNotHasKey('password', $log->old_values);
+        $this->assertSame(['must_reset_password' => false], $log->new_values);
+        $this->assertSame(['must_reset_password' => true], $log->old_values);
     }
 }
