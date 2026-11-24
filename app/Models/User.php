@@ -21,7 +21,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, Auditable;
+    use Auditable, HasFactory, Notifiable;
 
     protected array $auditExclude = ['password', 'remember_token'];
 

@@ -10,7 +10,7 @@ use Override;
 
 class Employee extends Model
 {
-    use HasFactory, Auditable;
+    use Auditable, HasFactory;
 
     protected array $auditSkipWhenOnly = ['employee_code'];
 
