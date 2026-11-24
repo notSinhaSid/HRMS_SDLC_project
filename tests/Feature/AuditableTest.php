@@ -3,29 +3,30 @@
 namespace Tests\Feature;
 
 use App\Models\AuditLog;
+use App\Models\Employee;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Override;
 use Tests\Concerns\CreateUsers;
 use Tests\TestCase;
 
 class AuditableTest extends TestCase
 {
-    use RefreshDatabase, CreateUsers;
+    use CreateUsers, RefreshDatabase;
 
     #[Override]
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->seed(DatabaseSeeder::class);
     }
 
-    public function test_creating_a_user_logs_one_created_row_without_password() : void {
+    public function test_creating_a_user_logs_one_created_row_without_password(): void
+    {
         $hr = $this->makeUser(Role::HR);
-        $email = "newTestEmployee@hrms.com";
+        $email = 'newTestEmployee@hrms.com';
         $this->actingAs($hr)->post(route('users.store'), [
             'name' => 'Jaideep kumar',
             'email' => $email,
@@ -42,5 +43,25 @@ class AuditableTest extends TestCase
         $this->assertSame($email, $new_values['email']);
         $this->assertSame('Jaideep kumar', $new_values['name']);
         $this->assertArrayNotHasKey('password', $new_values);
+    }
+
+    public function test_updating_an_employee_logs_exact_old_and_new_phone(): void
+    {
+        $hr = $this->makeUser(Role::HR);
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $row = Employee::factory()->create(['user_id' => $user->id, 'phone' => '9900990090']);
+
+        $this->actingAs($hr)->put(route('employees.update', $row->id), [
+            'phone' => '1001100111',
+            'date_of_joining' => $row->date_of_joining,
+        ])->assertSessionHasNoErrors();
+        $query = AuditLog::where('auditable_type', Employee::class)
+            ->where('auditable_id', $row->id)->where('action', 'updated');
+        $count = $query->count();
+        $this->assertSame(1, $count);
+        $log = $query->firstOrFail();
+        $this->assertSame('updated', $log->action);
+        $this->assertSame(['phone' => '1001100111'], $log->new_values);
+        $this->assertSame(['phone' => '9900990090'], $log->old_values);
     }
 }
