@@ -108,16 +108,17 @@ class AuditableTest extends TestCase
         $this->assertArrayNotHasKey('employee_code', $log->new_values);
     }
 
-    public function test_saving_identical_values_writes_no_audit_row_http_version() : void {
+    public function test_saving_identical_values_writes_no_audit_row_http_version(): void
+    {
         $hr = $this->makeUser(Role::HR);
         $user = $this->makeUser(Role::EMPLOYEE);
         $row = Employee::factory()->create(['user_id' => $user->id, 'phone' => '9900990090']);
         $this->actingAs($hr)->put(route('employees.update', $row->id), [
             'phone' => '9900990090',
-            'date_of_joining' => $row->date_of_joining->format('Y-m-d')
+            'date_of_joining' => $row->date_of_joining->format('Y-m-d'),
         ])->assertSessionHasNoErrors();
 
-        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id)->where('action','updated');
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id)->where('action', 'updated');
         $count = $query->count();
         $this->assertSame(0, $count);
 
@@ -133,14 +134,26 @@ class AuditableTest extends TestCase
         $this->assertSame(1, $query->count());
     }
 
-    public function test_updated_at_only_changes_without_writing_any_rows(): void {
+    public function test_updated_at_only_changes_without_writing_any_rows(): void
+    {
         $user = $this->makeUser(Role::EMPLOYEE);
-        $row = Employee::factory()->create(['user_id'=> $user->id]);
+        $row = Employee::factory()->create(['user_id' => $user->id]);
         $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id);
         $this->assertSame(1, $query->count());
         $this->travel(2)->minute();
         $row->touch();
         $this->assertSame(1, $query->count());
         $this->travelBack();
+    }
+
+    public function test_adding_employee_code_adds_no_row_to_audit(): void
+    {
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $row = Employee::factory()->create(['user_id' => $user->id]);
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id);
+        $this->assertSame(1, $query->count());
+        $row->forceFill(['employee_code' => 'EMP9999'])->save();
+        $this->assertSame(1, $query->count());
+        $this->assertArrayNotHasKey('employee_code', $query->firstOrFail()->new_values);
     }
 }
