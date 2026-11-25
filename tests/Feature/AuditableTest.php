@@ -132,4 +132,15 @@ class AuditableTest extends TestCase
         $row->save();
         $this->assertSame(1, $query->count());
     }
+
+    public function test_updated_at_only_changes_without_writing_any_rows(): void {
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $row = Employee::factory()->create(['user_id'=> $user->id]);
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id);
+        $this->assertSame(1, $query->count());
+        $this->travel(2)->minute();
+        $row->touch();
+        $this->assertSame(1, $query->count());
+        $this->travelBack();
+    }
 }
