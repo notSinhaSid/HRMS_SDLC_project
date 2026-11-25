@@ -171,4 +171,14 @@ class AuditableTest extends TestCase
         $this->assertSame(1, $query->count());
         $this->assertSame($hr->id, $query->firstOrFail()->user_id);
     }
+
+    public function test_no_actor_id_gives_user_id_as_null(): void
+    {
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $row = Employee::factory()->create(['user_id' => $user->id]);
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id)->where('action', 'created');
+        $this->assertSame(1, $query->count());
+        $log = $query->firstOrFail();
+        $this->assertNull($log->user_id);
+    }
 }
