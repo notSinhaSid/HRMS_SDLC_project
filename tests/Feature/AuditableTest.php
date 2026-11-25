@@ -181,4 +181,16 @@ class AuditableTest extends TestCase
         $log = $query->firstOrFail();
         $this->assertNull($log->user_id);
     }
+
+    public function test_remember_token_only_saves_no_row(): void
+    {
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $query = AuditLog::where('auditable_type', User::class)->where('auditable_id', $user->id);
+        $this->assertSame(1, $query->count());
+
+        $user->setRememberToken('X');
+        $user->save();
+
+        $this->assertSame(1, $query->count());
+    }
 }
