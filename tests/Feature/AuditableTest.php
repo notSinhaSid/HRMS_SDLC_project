@@ -156,4 +156,19 @@ class AuditableTest extends TestCase
         $this->assertSame(1, $query->count());
         $this->assertArrayNotHasKey('employee_code', $query->firstOrFail()->new_values);
     }
+
+    public function test_actor_is_recorded_on_an_updated_row(): void
+    {
+        $hr = $this->makeUser(Role::HR);
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $row = Employee::factory()->create(['user_id' => $user->id, 'phone' => '9900990090']);
+        $this->actingAs($hr)->put(route('employees.update', $row->id), [
+            'phone' => '9887655432',
+            'date_of_joining' => $row->date_of_joining->format('Y-m-d'),
+        ])->assertRedirectToRoute('employees.index')->assertSessionHasNoErrors();
+
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id)->where('action', 'updated');
+        $this->assertSame(1, $query->count());
+        $this->assertSame($hr->id, $query->firstOrFail()->user_id);
+    }
 }
