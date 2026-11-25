@@ -25,6 +25,8 @@ class User extends Authenticatable
 
     protected array $auditExclude = ['password', 'remember_token'];
 
+    protected array $auditSkipOnly = ['remember_token'];
+
     /**
      * Get the attributes that should be cast.
      *
