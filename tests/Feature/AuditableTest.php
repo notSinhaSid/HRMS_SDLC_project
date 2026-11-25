@@ -84,4 +84,27 @@ class AuditableTest extends TestCase
         $this->assertSame(['must_reset_password' => false], $log->new_values);
         $this->assertSame(['must_reset_password' => true], $log->old_values);
     }
+
+    public function test_employee_creation_logs_only_one_row(): void
+    {
+        $hr = $this->makeUser(Role::HR);
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $this->actingAs($hr)->post(route('employees.store'), [
+            'user_id' => $user->id,
+            'phone' => '9887655432',
+            'date_of_joining' => '2026-11-30',
+        ])->assertRedirectToRoute('employees.index')->assertSessionHasNoErrors();
+
+        $row = Employee::where('user_id', $user->id)->firstOrFail();
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id);
+        $count = $query->count();
+        $this->assertSame(1, $count);
+
+        $log = $query->firstOrFail();
+        $this->assertSame('created', $log->action);
+        $this->assertSame(null, $log->old_values);
+        $this->assertSame('9887655432', $log->new_values['phone']);
+        $this->assertArrayNotHasKey('updated_at', $log->new_values);
+        $this->assertArrayNotHasKey('employee_code', $log->new_values);
+    }
 }

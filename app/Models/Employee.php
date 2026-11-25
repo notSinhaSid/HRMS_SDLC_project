@@ -12,7 +12,7 @@ class Employee extends Model
 {
     use Auditable, HasFactory;
 
-    protected array $auditSkipWhenOnly = ['employee_code'];
+    protected array $auditSkipOnly = ['employee_code'];
 
     protected $fillable = [
         'department_id',
