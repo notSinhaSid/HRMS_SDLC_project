@@ -107,4 +107,29 @@ class AuditableTest extends TestCase
         $this->assertArrayNotHasKey('updated_at', $log->new_values);
         $this->assertArrayNotHasKey('employee_code', $log->new_values);
     }
+
+    public function test_saving_identical_values_writes_no_audit_row_http_version() : void {
+        $hr = $this->makeUser(Role::HR);
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $row = Employee::factory()->create(['user_id' => $user->id, 'phone' => '9900990090']);
+        $this->actingAs($hr)->put(route('employees.update', $row->id), [
+            'phone' => '9900990090',
+            'date_of_joining' => $row->date_of_joining->format('Y-m-d')
+        ])->assertSessionHasNoErrors();
+
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id)->where('action','updated');
+        $count = $query->count();
+        $this->assertSame(0, $count);
+
+    }
+
+    public function test_saving_with_no_changes_writes_no_audit_row(): void
+    {
+        $user = $this->makeUser(Role::EMPLOYEE);
+        $row = Employee::factory()->create(['user_id' => $user->id]);
+        $query = AuditLog::where('auditable_type', Employee::class)->where('auditable_id', $row->id);
+        $this->assertSame(1, $query->count());
+        $row->save();
+        $this->assertSame(1, $query->count());
+    }
 }
