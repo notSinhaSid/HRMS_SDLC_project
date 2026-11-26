@@ -1,9 +1,7 @@
-<div class="mb-3">
-    <label for="name" class="form-label">Designation Name</label>
-    <input type="text" placeholder="Designation name" class="form-control @error('name')
-        is-invalid
-    @enderror" value="{{ old('name', $designation->name ?? '') }}" name="name" id="name" autofocus>
-    @error('name')
-        <span class="text-danger">{{$message}}</span>
-    @enderror
-</div>
+<label for="name" class="form-label">Designation name <span class="required">*</span></label>
+<input type="text" placeholder="e.g. Software Engineer" name="name" id="name"
+       value="{{ old('name', $designation->name ?? '') }}"
+       class="form-control @error('name') is-invalid @enderror" autofocus>
+@error('name')
+    <div class="invalid-feedback">{{ $message }}</div>
+@enderror
