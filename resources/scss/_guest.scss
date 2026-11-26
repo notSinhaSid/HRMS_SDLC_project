@@ -1,9 +1,151 @@
+// ------------------------------------------------------------
+// Guest pages (login, forgot / reset password)
+// Split screen on lg+, single column below.
+// ------------------------------------------------------------
+
 .guest-wrapper {
+    display: flex;
     min-height: 100vh;
+    background: #fff;
+}
+
+.guest-aside {
+    position: relative;
+    overflow: hidden;
+    display: none;
+    flex: 0 0 46%;
+    max-width: 640px;
+    padding: 3rem;
+    color: #fff;
+    background:
+        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.07) 1px, transparent 0) 0 0 / 22px 22px,
+        linear-gradient(150deg, $brand-900 0%, $brand-800 55%, #1e3a8a 130%);
+
+    @include media-breakpoint-up(lg) {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .guest-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: 0.02em;
+    }
+
+    h2 {
+        color: #fff;
+        font-size: 2rem;
+        line-height: 1.25;
+        font-weight: 600;
+        max-width: 26rem;
+    }
+
+    .lead {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        max-width: 26rem;
+    }
+
+    .guest-art {
+        width: 100%;
+        max-width: 420px;
+        margin: 2rem 0;
+    }
+
+    .guest-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.85rem;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .bi {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: $border-radius;
+            background: rgba(255, 255, 255, 0.08);
+            color: $brand-accent;
+        }
+    }
+
+    .guest-copy {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.45);
+    }
+}
+
+.guest-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: $body-bg;
+
+    @include media-breakpoint-up(lg) {
+        background: #fff;
+    }
 }
 
 .guest-card {
     width: 100%;
     max-width: 420px;
-    
+
+    .guest-mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: $headings-color;
+        margin-bottom: 2rem;
+
+        @include media-breakpoint-up(lg) {
+            display: none;
+        }
+    }
+
+    .guest-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: $border-radius-lg;
+        background: #e8eefc;
+        color: $primary;
+        font-size: 1.35rem;
+        margin-bottom: 1.25rem;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .guest-subtitle {
+        color: $muted;
+        margin-bottom: 1.75rem;
+    }
+
+    .btn-lg {
+        font-size: 0.95rem;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+    }
 }
