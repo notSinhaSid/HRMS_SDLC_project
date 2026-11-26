@@ -1,16 +1,19 @@
 @extends('layouts.app')
-@section('title', 'Departments')
+@section('title', 'Edit Department')
 
 @section('content')
-<div class="card mx-auto" style="max-width: 480px;">
-    <div class="card-body">
-        <h1 class="h4">Edit department</h1>
-        <form action="{{ route('departments.update', $department) }}" method="post">
-            @csrf
-            @method('PATCH')
-            @include('departments.partials._form')
+    <x-page-header title="Edit department" :subtitle="$department->name"
+                   :breadcrumbs="['Dashboard' => route('dashboard'), 'Departments' => route('departments.index'), 'Edit' => null]" />
 
-            <button type="submit" class="btn btn-primary">Update department</button>
-        </form>
-    </div>
+    <form action="{{ route('departments.update', $department) }}" method="post" class="card form-card form-card-sm">
+        @csrf
+        @method('PATCH')
+        <div class="card-body">
+            @include('departments.partials._form')
+        </div>
+        <div class="card-footer">
+            <a href="{{ route('departments.index') }}" class="btn btn-light">Cancel</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Save changes</button>
+        </div>
+    </form>
 @endsection

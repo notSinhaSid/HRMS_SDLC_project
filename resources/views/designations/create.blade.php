@@ -1,15 +1,18 @@
 @extends('layouts.app')
-@section('title', 'Designations')
+@section('title', 'Add Designation')
 
 @section('content')
-<div class="card mx-auto" style="max-width: 480px;">
-    <div class="card-body">
-        <h1 class="h4">Add Designation</h1>
-        <form action="{{ route('designations.store') }}" method="post">
-            @csrf
-            @include('designations.partials._form')
+    <x-page-header title="Add designation"
+                   :breadcrumbs="['Dashboard' => route('dashboard'), 'Designations' => route('designations.index'), 'Add' => null]" />
 
-            <button type="submit" class="btn btn-primary">Add Designation</button>
-        </form>
-    </div>
+    <form action="{{ route('designations.store') }}" method="post" class="card form-card form-card-sm">
+        @csrf
+        <div class="card-body">
+            @include('designations.partials._form')
+        </div>
+        <div class="card-footer">
+            <a href="{{ route('designations.index') }}" class="btn btn-light">Cancel</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Add designation</button>
+        </div>
+    </form>
 @endsection
