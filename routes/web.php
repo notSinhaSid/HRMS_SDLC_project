@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Department\DepartmentController;
@@ -49,4 +50,7 @@ Route::middleware(['auth', NoCache::class, 'user-status-check', 'force-change-pa
     Route::resource('employees', EmployeeController::class)->only(['create', 'store'])->middleware('can:employee.create');
     Route::resource('employees', EmployeeController::class)->only(['edit', 'update'])->middleware('can:employee.update');
     Route::post('employees/{employee}/offboard', [EmployeeController::class, 'offboard'])->name('employees.offboard')->middleware('can:employee.update');
+
+    // attendance routes - check in
+    Route::post('check-in', [AttendanceController::class, 'store'])->name('attendance.checkin');
 });
