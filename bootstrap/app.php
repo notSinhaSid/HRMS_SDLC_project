@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserHasEmployeeRecord;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\ForcePasswordChange;
 use Illuminate\Foundation\Application;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'force-change-password' => ForcePasswordChange::class,
             'user-status-check' => EnsureUserIsActive::class,
+            'has-employee' => EnsureUserHasEmployeeRecord::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
