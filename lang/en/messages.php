@@ -36,5 +36,6 @@ return [
         'check_out_success' => 'Checked-out at :time.',
         'check_out_failed' => 'Failed to check out. Try again.',
         'already_checked_in' => 'Already checked in.',
+        'no_employee_record' => 'No employee record found. Contact support.',
     ],
 ];
