@@ -52,5 +52,5 @@ Route::middleware(['auth', NoCache::class, 'user-status-check', 'force-change-pa
     Route::post('employees/{employee}/offboard', [EmployeeController::class, 'offboard'])->name('employees.offboard')->middleware('can:employee.update');
 
     // attendance routes - check in
-    Route::post('check-in', [AttendanceController::class, 'store'])->name('attendance.checkin');
+    Route::post('check-in', [AttendanceController::class, 'store'])->name('attendance.checkin')->middleware('has-employee');
 });
