@@ -30,4 +30,11 @@ return [
         'offboard_success' => ':name has been offboarded.',
         'already_offboarded' => ':name is already offboarded.',
     ],
+    'attendance' => [
+        'check_in_success' => 'Checked-In at :time',
+        'check_in_failed' => 'Failed to check-in. Try again.',
+        'check_out_success' => 'Checked-out at :time.',
+        'check_out_failed' => 'Failed to check out. Try again.',
+        'already_checked_in' => 'Already checked in.',
+    ],
 ];
